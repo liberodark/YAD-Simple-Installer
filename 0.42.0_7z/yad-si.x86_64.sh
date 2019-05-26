@@ -51,7 +51,7 @@ echo "@disabled@" > "$form_pipe"
 echo "@disabled@" > "$form_pipe"
 
 # Unpacking package
-"$extract" x archive.7z -oc:"$1" >> "$progress_pipe" \
+"$extract" x archive.7z -aoa -oc:"$1" >> "$progress_pipe" \
 2>&1 >> "$progress_pipe" & echo "$!" >> "$main_proc_id"
 
 # Wait here and it returns exit status "${?}"
