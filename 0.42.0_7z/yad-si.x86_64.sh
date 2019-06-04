@@ -56,7 +56,7 @@ echo "@disabled@" > "$form_pipe"
 
 # Wait here and it returns exit status "${?}"
 # It's stderr redirected to /dev/null for prevent messages from the kill
-wait "$(<$main_proc_id)" 2>/dev/null
+wait "$(<"$main_proc_id")" 2>/dev/null
 
 if [ "$?" = "0" ]; then
 	echo "#Installation completed" >> "$progress_pipe"
@@ -119,7 +119,7 @@ if [ -s "$main_proc_id" ] && [ "$sure_command_pid" = "" ] && \
 	--window-icon="system-software-install" \
 	--button="gtk-yes:0" --button="gtk-no:1"; then
 	if [ -s "$main_proc_id" ]; then
-		bckupid="$(<$main_proc_id)"
+		bckupid="$(<"$main_proc_id")"
 		>"$main_proc_id"
 		kill "$bckupid" 2>/dev/null
 	fi
