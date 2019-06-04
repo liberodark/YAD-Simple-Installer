@@ -17,9 +17,12 @@ export appname="My Package"
 export icon="game_Data/Resources/UnityPlayer.png"
 
 # Initial set
-export dir="$(dirname "$(realpath "$0")")"
-export extract="$dir"/7za
-export yad="$dir"/yad.x86_64
+dir="$(dirname "$(realpath "$0")")"
+export "dir"
+extract="$dir"/7za
+export "extract"
+yad="$dir"/yad.x86_64
+export "yad"
 
 # User environment variables
 [ -z "$XDG_CONFIG_HOME" ] && XDG_CONFIG_HOME="$HOME/.config"
@@ -31,10 +34,13 @@ export menu_launcher="$menu_dir/$appname.desktop"
 export desktop_launcher="$XDG_DESKTOP_DIR/$appname.desktop"
 
 # Stores basic process IDs
-export main_proc_id="$(mktemp -u --tmpdir fpid.XXXXXXXX)"
-export progress_pipe="$(mktemp -u --tmpdir ftd.XXXXXXXX)"
+main_proc_id="$(mktemp -u --tmpdir fpid.XXXXXXXX)"
+export "main_proc_id"
+progress_pipe="$(mktemp -u --tmpdir ftd.XXXXXXXX)"
+export "progress_pipe"
 mkfifo "$progress_pipe"
-export form_pipe="$(mktemp -u --tmpdir ftd2.XXXXXXXX)"
+form_pipe="$(mktemp -u --tmpdir ftd2.XXXXXXXX)"
+export "form_pipe"
 mkfifo "$form_pipe"
 trap 'rm -f "$main_proc_id" "$progress_pipe" "$form_pipe"' "EXIT"
 export key="$(($RANDOM * $$))"
@@ -60,13 +66,11 @@ wait "$(<"$main_proc_id")" 2>/dev/null
 
 if [ "$?" = "0" ]; then
 	echo "#Installation completed" >> "$progress_pipe"
-	kill "$main_pid" 2>/dev/null
-	>"$main_proc_id"
+	kill "$main_pid" >"$main_proc_id" 2>/dev/null
 else
 	echo "#Installation error" >> "$progress_pipe"
 	echo $? >> "$progress_pipe" 
-	kill "$main_pid" 2>/dev/null
-	>"$main_proc_id"
+	kill "$main_pid" >"$main_proc_id" 2>/dev/null
 fi
 
 # Create launchers in the applications menu and/or on the desktop
