@@ -1,14 +1,10 @@
 #!/bin/bash
 #
-# YAD Simple Installer 18.01.2019 by Хрюнделёк.
-# https://rutracker.org/forum/profile.php?mode=viewprofile&u=17809259
-# Thanks to Misko-2083 (https://github.com/Misko-2083) for the idea.
-#
-# YAD 0.38.2 (Yet Another Dialog) by Victor Ananjevsky.
-# https://github.com/v1cont/yad
-#
-# FreeArc'Next 0.11 by Bulat Ziganshin.
-# https://github.com/Bulat-Ziganshin/FA
+# About: YAD Simple Installer
+# Author: Хрюнделёк & liberodark
+# Thanks : Misko-2083
+# License: GNU GPLv3
+# Version: 18.08.2019
 
 # Application name
 export appname="TinyKeep"
