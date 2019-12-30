@@ -7,10 +7,10 @@
 # Version: 30.12.2019
 
 # Application name
-export appname="Deadly Days"
+export appname="MyGame"
 
 # Launchers icon
-export icon="Deadly\ Days_Data/Resources/UnityPlayer.png"
+export icon="My_Data/Resources/UnityPlayer.png"
 
 # Initial set
 export dir="$(dirname "$(realpath "$0")")"
