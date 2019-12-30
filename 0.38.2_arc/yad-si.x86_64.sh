@@ -6,15 +6,6 @@
 # License: GNU GPLv3
 # Version: 30.12.2019
 
-# Check SHA1
-if ! sha1sum -c archive.fa.checksum &> /dev/null
- then
-      echo "Error Check Game"
-      exit
-  else
-      echo "Check Success Game"
-fi
-
 # Application name
 export appname="Deadly Days"
 
@@ -54,6 +45,17 @@ echo "@disabled@" > "$form_pipe"
 echo "@disabled@" > "$form_pipe"
 echo "@disabled@" > "$form_pipe"
 echo "@disabled@" > "$form_pipe"
+
+# Check SHA1
+if ! sha1sum -c archive.fa.checksum &> /dev/null
+ then
+      echo "#Game Integrity Error" >> "$progress_pipe"
+	  kill "$main_pid" 2>/dev/null 
+	  >"$main_proc_id"
+	  exit
+  else
+      echo "#Game Integrity Success"
+fi
 
 # Unpacking from the archive
 "$fa" x "$dir"/archive.fa -o+ -dp"$1" >> "$progress_pipe" \
