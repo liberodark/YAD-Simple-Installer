@@ -4,7 +4,16 @@
 # Author: Хрюнделёк & liberodark
 # Thanks : Misko-2083
 # License: GNU GPLv3
-# Version: 18.08.2019
+# Version: 30.12.2019
+
+# Check SHA1
+if ! sha1sum -c archive.fa.checksum &> /dev/null
+ then
+      echo "Error Check Game"
+      exit
+  else
+      echo "Check Success Game"
+fi
 
 # Application name
 export appname="TinyKeep"
