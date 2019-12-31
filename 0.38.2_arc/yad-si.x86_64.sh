@@ -39,7 +39,8 @@ mkfifo "$form_pipe"
 trap 'rm -f "$main_proc_id" "$progress_pipe" "$form_pipe"' "EXIT"
 key="$((RANDOM * $$))"
 export key
-unpack=(bash -c "install_app %1 %2 %3 %4")
+#unpack=(bash -c "install_app %1 %2 %3 %4")
+unpack='bash -c "install_app %1 %2 %3 %4"'
 export unpack
 
 function install_app
@@ -118,8 +119,7 @@ sure_command='"$yad" --title=" " --width=1 \
 	--text-align=center --on-top --center \
 	--window-icon="system-software-install" \
 	--button="gtk-yes:0" --button="gtk-no:1"'
-sure_command_pid="$(ps -eo pid,cmd | grep -F "$sure_command" | grep -v \
-"grep" | awk '{ print $1 }')"
+sure_command_pid="$(pgrep -f "$sure_command")"
 
 if [ -s "$main_proc_id" ] && [ "$sure_command_pid" = "" ] && \
 	"$yad" --title=" " --width=1 \
@@ -157,7 +157,7 @@ exec 4<> "$form_pipe"
 echo "$HOME" > "$form_pipe"		# default directory
 echo "TRUE" > "$form_pipe"		# default first checkbox value
 echo "FALSE" > "$form_pipe"		# default second checkbox value
-echo "${unpack[@]}" > "$form_pipe"	# progress bar value
+echo "$unpack &" > "$form_pipe"	# progress bar value
 
 "$yad" --plug="$key" --tabnum=2 --progress <&3 &
 
