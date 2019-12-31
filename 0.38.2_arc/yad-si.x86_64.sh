@@ -37,7 +37,7 @@ form_pipe="$(mktemp -u --tmpdir ftd2.XXXXXXXX)"
 export form_pipe
 mkfifo "$form_pipe"
 trap 'rm -f "$main_proc_id" "$progress_pipe" "$form_pipe"' "EXIT"
-export key="$(($RANDOM * $$))"
+export key="$((RANDOM * $$))"
 export unpack='bash -c "install_app %1 %2 %3 %4"'
 
 function install_app
