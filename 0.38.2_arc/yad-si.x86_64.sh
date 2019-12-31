@@ -4,7 +4,7 @@
 # Author: Хрюнделёк & liberodark
 # Thanks : Misko-2083
 # License: GNU GPLv3
-# Version: 30.12.2019
+# Version: 31.12.2019
 
 # Application name
 export appname="MyGame"
@@ -13,7 +13,8 @@ export appname="MyGame"
 export icon="My_Data/Resources/UnityPlayer.png"
 
 # Initial set
-export dir="$(dirname "$(realpath "$0")")"
+dir="$(dirname "$(realpath "$0")")"
+export dir
 export fa="$dir"/fa.x86_64
 export yad="$dir"/yad.x86_64
 
@@ -27,10 +28,13 @@ export menu_launcher="$menu_dir/$appname.desktop"
 export desktop_launcher="$XDG_DESKTOP_DIR/$appname.desktop"
 
 # Stores basic process IDs
-export main_proc_id="$(mktemp -u --tmpdir fpid.XXXXXXXX)"
-export progress_pipe="$(mktemp -u --tmpdir ftd.XXXXXXXX)"
+main_proc_id="$(mktemp -u --tmpdir fpid.XXXXXXXX)"
+export main_proc_id
+progress_pipe="$(mktemp -u --tmpdir ftd.XXXXXXXX)"
+export progress_pipe
 mkfifo "$progress_pipe"
-export form_pipe="$(mktemp -u --tmpdir ftd2.XXXXXXXX)"
+form_pipe="$(mktemp -u --tmpdir ftd2.XXXXXXXX)"
+export form_pipe
 mkfifo "$form_pipe"
 trap 'rm -f "$main_proc_id" "$progress_pipe" "$form_pipe"' "EXIT"
 export key="$(($RANDOM * $$))"
@@ -50,8 +54,7 @@ echo "@disabled@" > "$form_pipe"
 if ! sha1sum -c archive.fa.checksum &> /dev/null
  then
       echo "#Game Integrity Error" >> "$progress_pipe"
-	  kill "$main_pid" 2>/dev/null 
-	  >"$main_proc_id"
+	  kill "$main_pid" 2>/dev/null >"$main_proc_id"
 	  exit
   else
       echo "#Game Integrity Success"
@@ -67,12 +70,10 @@ wait "$(<$main_proc_id)" 2>/dev/null
 
 if [ "$?" = "0" ]; then
 	echo "#Installation completed" >> "$progress_pipe"
-	kill "$main_pid" 2>/dev/null
-	>"$main_proc_id"
+	kill "$main_pid" 2>/dev/null >"$main_proc_id"
 else
 	echo "#Installation error" >> "$progress_pipe"
-	kill "$main_pid" 2>/dev/null
-	>"$main_proc_id"
+	kill "$main_pid" 2>/dev/null >"$main_proc_id"
 fi
 
 # Create launchers in the applications menu and/or on the desktop
@@ -125,8 +126,7 @@ if [ -s "$main_proc_id" ] && [ "$sure_command_pid" = "" ] && \
 	--window-icon="system-software-install" \
 	--button="gtk-yes:0" --button="gtk-no:1"; then
 	if [ -s "$main_proc_id" ]; then
-		bckupid="$(<$main_proc_id)"
-		>"$main_proc_id"
+		bckupid="$(<"$main_proc_id")" >"$main_proc_id"
 		kill "$bckupid" 2>/dev/null
 	fi
 
