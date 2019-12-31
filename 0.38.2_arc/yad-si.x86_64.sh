@@ -37,8 +37,10 @@ form_pipe="$(mktemp -u --tmpdir ftd2.XXXXXXXX)"
 export form_pipe
 mkfifo "$form_pipe"
 trap 'rm -f "$main_proc_id" "$progress_pipe" "$form_pipe"' "EXIT"
-export key="$((RANDOM * $$))"
-export unpack='bash -c "install_app %1 %2 %3 %4"'
+key="$((RANDOM * $$))"
+export key
+unpack=(bash -c "install_app %1 %2 %3 %4")
+export unpack
 
 function install_app
 {
@@ -155,7 +157,7 @@ exec 4<> "$form_pipe"
 echo "$HOME" > "$form_pipe"		# default directory
 echo "TRUE" > "$form_pipe"		# default first checkbox value
 echo "FALSE" > "$form_pipe"		# default second checkbox value
-echo "$unpack &" > "$form_pipe"	# progress bar value
+echo "${unpack[@]}" > "$form_pipe"	# progress bar value
 
 "$yad" --plug="$key" --tabnum=2 --progress <&3 &
 
