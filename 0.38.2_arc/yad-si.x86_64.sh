@@ -68,7 +68,7 @@ fi
 
 # Wait here and it returns exit status "${?}"
 # It's stderr redirected to /dev/null for prevent messages from the kill
-wait "$(<$main_proc_id)" 2>/dev/null
+wait "$(<"$main_proc_id")" 2>/dev/null
 
 if [ "$?" = "0" ]; then
 	echo "#Installation completed" >> "$progress_pipe"
