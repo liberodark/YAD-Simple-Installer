@@ -1,7 +1,7 @@
 # YAD-Simple-Installer
 YAD Simple Installer
 
-#### YAD 0.38.2 (Yet Another Dialog) by Victor Ananjevsky.
+#### YAD 0.42.0 (Yet Another Dialog) by Victor Ananjevsky.
 https://github.com/v1cont/yad
 
 #### FreeArc'Next 0.11 by Bulat Ziganshin.

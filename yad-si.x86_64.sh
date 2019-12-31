@@ -4,7 +4,7 @@
 # Author: Хрюнделёк & liberodark
 # Thanks : Misko-2083
 # License: GNU GPLv3
-# Version: 30.12.2019
+# Version: 31.12.2019
 
 # Application name
 export appname="MyGame"
@@ -13,9 +13,15 @@ export appname="MyGame"
 export icon="My_Data/Resources/UnityPlayer.png"
 
 # Initial set
-export dir="$(dirname "$(realpath "$0")")"
+dir="$(dirname "$(realpath "$0")")"
+export dir
 export fa="$dir"/fa.x86_64
 export yad="$dir"/yad.x86_64
+
+# Test Xwayland session
+if ps -C "Xwayland" >/dev/null; then
+	export GDK_BACKEND=x11
+fi
 
 # User environment variables
 [ -z "$XDG_CONFIG_HOME" ] && XDG_CONFIG_HOME="$HOME/.config"
@@ -27,14 +33,20 @@ export menu_launcher="$menu_dir/$appname.desktop"
 export desktop_launcher="$XDG_DESKTOP_DIR/$appname.desktop"
 
 # Stores basic process IDs
-export main_proc_id="$(mktemp -u --tmpdir fpid.XXXXXXXX)"
-export progress_pipe="$(mktemp -u --tmpdir ftd.XXXXXXXX)"
+main_proc_id="$(mktemp -u --tmpdir fpid.XXXXXXXX)"
+export main_proc_id
+progress_pipe="$(mktemp -u --tmpdir ftd.XXXXXXXX)"
+export progress_pipe
 mkfifo "$progress_pipe"
-export form_pipe="$(mktemp -u --tmpdir ftd2.XXXXXXXX)"
+form_pipe="$(mktemp -u --tmpdir ftd2.XXXXXXXX)"
+export form_pipe
 mkfifo "$form_pipe"
 trap 'rm -f "$main_proc_id" "$progress_pipe" "$form_pipe"' "EXIT"
-export key="$(($RANDOM * $$))"
-export unpack='bash -c "install_app %1 %2 %3 %4"'
+key="$((RANDOM * $$))"
+export key
+#unpack=(bash -c "install_app %1 %2 %3 %4")
+unpack='bash -c "install_app %1 %2 %3 %4"'
+export unpack
 
 function install_app
 {
@@ -50,8 +62,7 @@ echo "@disabled@" > "$form_pipe"
 if ! sha1sum -c archive.fa.checksum &> /dev/null
  then
       echo "#Game Integrity Error" >> "$progress_pipe"
-	  kill "$main_pid" 2>/dev/null 
-	  >"$main_proc_id"
+	  kill "$main_pid" 2>/dev/null >"$main_proc_id"
 	  exit
   else
       echo "#Game Integrity Success"
@@ -63,16 +74,14 @@ fi
 
 # Wait here and it returns exit status "${?}"
 # It's stderr redirected to /dev/null for prevent messages from the kill
-wait "$(<$main_proc_id)" 2>/dev/null
+wait "$(<"$main_proc_id")" 2>/dev/null
 
 if [ "$?" = "0" ]; then
 	echo "#Installation completed" >> "$progress_pipe"
-	kill "$main_pid" 2>/dev/null
-	>"$main_proc_id"
+	kill "$main_pid" 2>/dev/null >"$main_proc_id"
 else
 	echo "#Installation error" >> "$progress_pipe"
-	kill "$main_pid" 2>/dev/null
-	>"$main_proc_id"
+	kill "$main_pid" 2>/dev/null >"$main_proc_id"
 fi
 
 # Create launchers in the applications menu and/or on the desktop
@@ -115,8 +124,7 @@ sure_command='"$yad" --title=" " --width=1 \
 	--text-align=center --on-top --center \
 	--window-icon="system-software-install" \
 	--button="gtk-yes:0" --button="gtk-no:1"'
-sure_command_pid="$(ps -eo pid,cmd | grep -F "$sure_command" | grep -v \
-"grep" | awk '{ print $1 }')"
+sure_command_pid="$(pgrep -f "$sure_command")"
 
 if [ -s "$main_proc_id" ] && [ "$sure_command_pid" = "" ] && \
 	"$yad" --title=" " --width=1 \
@@ -125,8 +133,7 @@ if [ -s "$main_proc_id" ] && [ "$sure_command_pid" = "" ] && \
 	--window-icon="system-software-install" \
 	--button="gtk-yes:0" --button="gtk-no:1"; then
 	if [ -s "$main_proc_id" ]; then
-		bckupid="$(<$main_proc_id)"
-		>"$main_proc_id"
+		bckupid="$(<"$main_proc_id")" >"$main_proc_id"
 		kill "$bckupid" 2>/dev/null
 	fi
 
@@ -156,6 +163,8 @@ echo "$HOME" > "$form_pipe"		# default directory
 echo "TRUE" > "$form_pipe"		# default first checkbox value
 echo "FALSE" > "$form_pipe"		# default second checkbox value
 echo "$unpack &" > "$form_pipe"	# progress bar value
+# fix for shellchek
+#echo 'bash -c "install_app %1 %2 %3 %4"' > "$form_pipe"	# progress bar value
 
 "$yad" --plug="$key" --tabnum=2 --progress <&3 &
 
