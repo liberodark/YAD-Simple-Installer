@@ -18,6 +18,11 @@ export dir
 export fa="$dir"/fa.x86_64
 export yad="$dir"/yad.x86_64
 
+# Test Xwayland session
+if ps -C "Xwayland" >/dev/null; then
+	export GDK_BACKEND=x11
+fi
+
 # User environment variables
 [ -z "$XDG_CONFIG_HOME" ] && XDG_CONFIG_HOME="$HOME/.config"
 . "$XDG_CONFIG_HOME/user-dirs.dirs"
