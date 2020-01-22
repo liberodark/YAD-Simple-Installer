@@ -59,7 +59,7 @@ echo "@disabled@" > "$form_pipe"
 echo "@disabled@" > "$form_pipe"
 
 # Check SHA1
-if ! sha256sum -c archive.fa.checksum &> /dev/null
+if ! sha1sum -c archive.fa.checksum &> /dev/null
  then
       echo "#Game Integrity Error" >> "$progress_pipe"
 	  kill "$main_pid" 2>/dev/null >"$main_proc_id"
