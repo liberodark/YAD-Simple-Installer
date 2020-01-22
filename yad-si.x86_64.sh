@@ -4,7 +4,7 @@
 # Author: Хрюнделёк & liberodark
 # Thanks : Misko-2083
 # License: GNU GPLv3
-# Version: 31.12.2019
+# Version: 22.01.2020
 
 # Application name
 export appname="MyGame"
